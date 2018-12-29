@@ -2,19 +2,74 @@
 # tasks file for ansible-timezone
 - include_tasks: facts.yml
 
-- name: main | Setting Timezone
-  timezone:
-    name: "{{ timezone }}"
-  tags:
-    - configuration
-    - timezone
-  when: not timezone_update_hardware_clock
+# tasks file for adriagalin.timezone
+- name: install tzdata if it is necessary
+  apt: name=tzdata state=present
 
-- name: main | Setting Timezone And Hardware Clock
+- name: "Check current timezone"
+  shell: cat /etc/timezone
+  register: current_timezone
+  changed_when: False
+
+- name: "Set timezone"
   timezone:
     name: "{{ timezone }}"
-    hwclock: true
-  tags:
-    - configuration
-    - timezone
-  when: timezone_update_hardware_clock
+  notify:
+  - restart systemd-timesyncd
+
+- name: Run timedatectl status
+  command: /usr/bin/timedatectl status
+  changed_when: False
+  check_mode: no
+  register: timedatectl_result
+
+- name: Run timedatectl set-ntp no AKA turn off systemd-timesyncd
+  command: /usr/bin/timedatectl set-ntp no
+  changed_when: False
+  check_mode: no
+  register: timedatectl_result
+  notify:
+  - restart systemd-timesyncd
+  - restart cron
+
+- name: Run timedatectl status
+  command: /usr/bin/timedatectl status
+  register: timedatectl_result
+  changed_when: 'timedatectl_result.stdout is search("Network time on: no")'
+  notify:
+  - restart systemd-timesyncd
+  - restart cron
+
+- name: Keep systemd-timesyncd on - but without ntp support enabled
+  service: name=systemd-timesyncd state=started enabled=yes
+
+# In ansible playbooks, handlers (such as to restart a service) normally happen at the end of a run. If you need ansible to run a handler between two tasks, there is "flush_handlers".
+- name: flush handlers
+  meta: flush_handlers
+
+# - name: main | Setting Timezone
+#   timezone:
+#     name: "{{ timezone }}"
+#   when: not timezone_update_hardware_clock
+
+# - name: main | Setting Timezone And Hardware Clock
+#   timezone:
+#     name: "{{ timezone }}"
+#     # hwclock: true
+#   when: timezone_update_hardware_clock
+
+
+
+
+###########################
+
+# TODO: Add an ansible verify step here
+# root@timezone-node1:~# timedatectl status
+#       Local time: Sat 2018-12-29 15:42:20 EST
+#   Universal time: Sat 2018-12-29 20:42:20 UTC
+#         RTC time: Sat 2018-12-29 20:42:19
+#        Time zone: America/New_York (EST, -0500)
+#  Network time on: yes
+# NTP synchronized: no
+#  RTC in local TZ: no
+# root@timezone-node1:~#

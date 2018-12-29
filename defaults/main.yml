@@ -9,3 +9,7 @@
 timezone: 'UTC'
 
 timezone_update_hardware_clock: false
+
+boss__timezone__timezone: 'UTC'
+
+boss__timezone__timezone_update_hardware_clock: false
