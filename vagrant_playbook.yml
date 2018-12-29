@@ -1,9 +1,10 @@
+# ansible-configured
 ---
 ##############################################################################
-# SERVERS: Install and configure wireshark
+# SERVERS: Install and configure timezone
 ##############################################################################
 - hosts: servers
-  name: servers install etckeeper
+  name: servers set timezone to UTC
   gather_facts: True
   become: yes
   become_method: sudo
@@ -13,55 +14,7 @@
     - servers
     - install
     - servers_install
-    - etckeeper
-    - tools
-
-  pre_tasks:
-
-    - name: RedHat | Install a few packages for the tests
-      yum: name={{ item }}
-      with_items:
-        - file
-        - nc
-      when: ansible_os_family == "RedHat"
-
-    - name: Debian | Install a few packages for the tests
-      apt: name={{ item }}
-      with_items:
-        - curl
-        - file
-        - netcat
-      when: ansible_os_family == "Debian"
+    - timezone
 
   roles:
-    - role: boss-ansible-role-tools
-      task: tools
-      bossjones__user: vagrant
-      bossjones__group: vagrant
-    - role: ansible-timezone
-      timezone: 'America/New_York'
-      timezone_update_hardware_clock: False
-    - role: boss-ansible-role-ntp
-      task: install
-      bossjones__user: vagrant
-      bossjones__group: vagrant
-      timezone: 'America/New_York'
-      timezone_update_hardware_clock: False
-      # defaults file for ansible-ntp
-      # Defines if host is ntp_master
-      # set ntp_master to true on specific group_vars/group
-      ntp_master: False
-
-      # Define your ntp_master_servers
-      ntp_master_servers:
-        - 0.ubuntu.pool.ntp.org
-        - 1.ubuntu.pool.ntp.org
-        - 2.ubuntu.pool.ntp.org
-        - 3.ubuntu.pool.ntp.org
-    - role: boss-ansible-role-journald
-    - role: boss-ansible-role-debug
-      boss__debug__debug_variables_file: '/tmp/ansible_variables'
-      boss__debug__dump_dir: '/etc/ansible_dumps'
-      boss__debug__dump_type: 'unified' # seperate
-
     - role: ../

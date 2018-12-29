@@ -13,7 +13,7 @@
     netdata_stream_enabled: True
     # You can generate API keys, with the linux command: uuidgen
     netdata_stream_api_key: 3402645b-2dbd-40d7-b748-21f564813f2f
-    netdata_stream_master_node: '192.168.50.106'
+    netdata_stream_master_node: '192.168.50.109'
     nginx_listen_port: 8080
   roles:
     - role: ansible-netdata
@@ -199,7 +199,7 @@
                   type = wireshark
                   destination = localhost:2003
                   prefix = netdata
-                  hostname = wireshark-master1
+                  hostname = timezone-node1
                   update every = 10
                   buffer on failures = 10
                   timeout ms = 20000

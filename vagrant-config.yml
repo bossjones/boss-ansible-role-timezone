@@ -1,19 +1,19 @@
 # https://gist.github.com/gnarf/b103e77f37236ca72d8e
 :vms:
-  wireshark-master1:
-    :hostname: "wireshark-master1"
-    :ip: "192.168.50.106"
+  timezone-node1:
+    :hostname: "timezone-node1"
+    :ip: "192.168.50.109"
     :ram: 2048
     :cpu: 2
     :box: "ubuntu/xenial64"
     :id: 10
 
 :groups:
-  wireshark-master1:
-    - wireshark-master1
+  timezone-node1:
+    - timezone-node1
   servers:
-    - wireshark-master1
-  kubernetes-wireshark-master1:
-    - wireshark-master1
+    - timezone-node1
+  kubernetes-timezone-node1:
+    - timezone-node1
   kubernetes:
-    - wireshark-master1
+    - timezone-node1

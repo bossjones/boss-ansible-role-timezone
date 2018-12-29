@@ -10,8 +10,8 @@ DNSMASQ_DOMAIN         := hyenalab.home
 # URL_PATH_CONSUL        := 8500
 # URL_PATH_TRAEFIK       := 80
 # URL_PATH_TRAEFIK_API   := 8080
-URL_PATH_NETDATA_REGISTRY  := "http://wireshark-master1.$(DNSMASQ_DOMAIN):19999"
-URL_PATH_GRAPHITE          := "http://wireshark-master1.$(DNSMASQ_DOMAIN):8080"
+URL_PATH_NETDATA_REGISTRY  := "http://timezone-node1.$(DNSMASQ_DOMAIN):19999"
+URL_PATH_GRAPHITE          := "http://timezone-node1.$(DNSMASQ_DOMAIN):8080"
 URL_PATH_WHOAMI            := "http://whoami.$(DNSMASQ_DOMAIN)"
 URL_PATH_ECHOSERVER        := "http://echoserver.$(DNSMASQ_DOMAIN)"
 URL_PATH_ELASTICSEARCH     := "http://elasticsearch.$(DNSMASQ_DOMAIN)"
@@ -26,7 +26,7 @@ URL_PATH_DASHBOARD         := "http://localhost:8001/api/v1/namespaces/kube-syst
 PR_SHA                := $(shell git rev-parse HEAD)
 
 define ASCILOGO
-boss-ansible-role-graphite
+boss-ansible-role-timezone
 =======================================
 endef
 
