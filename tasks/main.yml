@@ -16,26 +16,33 @@
     name: "{{ timezone }}"
   notify:
   - restart systemd-timesyncd
+  - restart cron
+
+- name: "Check current timezone"
+  shell: cat /etc/timezone
+  register: current_timezone
+  changed_when: False
 
 - name: Run timedatectl status
   command: /usr/bin/timedatectl status
   changed_when: False
   check_mode: no
-  register: timedatectl_result
+  register: timedatectl_status_result
 
-- name: Run timedatectl set-ntp no AKA turn off systemd-timesyncd
+- name: 'Run timedatectl set-ntp NO AKA turn off systemd-timesyncd only if "NTP synchronized: yes" is set'
   command: /usr/bin/timedatectl set-ntp no
   changed_when: False
   check_mode: no
-  register: timedatectl_result
+  register: timedatectl_set_no_ntp_result
   notify:
   - restart systemd-timesyncd
   - restart cron
+  when: '"NTP synchronized: yes" in timedatectl_status_result.stdout'
 
-- name: Run timedatectl status
+- name: Run timedatectl status again
   command: /usr/bin/timedatectl status
-  register: timedatectl_result
-  changed_when: 'timedatectl_result.stdout is search("Network time on: no")'
+  register: timedatectl_set_no_ntp_result
+  changed_when: 'timedatectl_set_no_ntp_result.stdout is search("Network time on: no")'
   notify:
   - restart systemd-timesyncd
   - restart cron
@@ -73,3 +80,10 @@
 # NTP synchronized: no
 #  RTC in local TZ: no
 # root@timezone-node1:~#
+
+- name: Verify that new timezone is in stdout of timedatectl
+  shell: timedatectl status
+  register: timedatectl_logout
+  failed_when: >
+    "{{ timezone }}" not in timedatectl_logout.stdout or
+    'Network time on: no' in timedatectl_logout.stdout
