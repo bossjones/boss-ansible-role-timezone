@@ -162,6 +162,7 @@ reload:
 	@vagrant reload
 
 destroy:
+	@vagrant halt -f
 	@vagrant destroy -f
 
 run-ansible:
