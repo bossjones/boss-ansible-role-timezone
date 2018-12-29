@@ -3,7 +3,7 @@ allow_duplicates: no
 
 galaxy_info:
   author: Malcolm Jones
-  description: Ansible role to configure wireshark. Part of the bossjones suite of ansible roles
+  description: Ansible role to configure timezone. Part of the bossjones suite of ansible roles
   company: Tony Dark Labs
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -48,7 +48,7 @@ galaxy_info:
   # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
   #       Maximum 20 tags per role.
   galaxy_tags:
-    - wireshark
+    - timezone
 
 dependencies:
   - role: ansible-goss-install
@@ -68,4 +68,3 @@ dependencies:
       goss_create_dst_dir: True
 
   - role: ansible-motd
-  # - role: ansible-journald
