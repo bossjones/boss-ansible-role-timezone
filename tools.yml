@@ -1,0 +1,21 @@
+---
+- hosts: servers
+  gather_facts: True
+  become: yes
+  become_method: sudo
+  tags:
+    - netdata_registry
+  vars:
+    netdata_registry_enabled: True
+    netdata_registry_to_announce: "http://{{ netdata_stream_master_node }}:{{ netdata_default_port }}"
+    pri_domain_name: scarlett-office.local
+    netdata_stream_enabled: True
+    # You can generate API keys, with the linux command: uuidgen
+    netdata_stream_api_key: 3402645b-2dbd-40d7-b748-21f564813f2f
+    netdata_stream_master_node: '192.168.50.106'
+    nginx_listen_port: 8080
+  roles:
+    - role: boss-ansible-role-tools
+      task: tools
+      bossjones__user: vagrant
+      bossjones__group: vagrant

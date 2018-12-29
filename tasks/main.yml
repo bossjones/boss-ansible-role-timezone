@@ -1,0 +1,65 @@
+---
+- include_tasks: facts.yml
+
+- name: Add repositories
+  apt_repository:
+    repo: 'ppa:wireshark-dev/stable'
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: "Install wireshark"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+      - wireshark
+
+
+# X11Forwarding yes
+#   X11DisplayOffset 10
+#   X11UseLocalhost yes
+
+- name: Add .ssh directories
+  file:
+    path: "/home/{{bossjones__user}}/.ssh"
+    state: "directory"
+    mode: "0700"
+    owner: "{{bossjones__user}}"
+    group: "{{bossjones__user}}"
+  with_items: users
+
+# - name: Add keys
+#   lineinfile:
+#     dest=/home/{{bossjones__user}}/.ssh/authorized_keys
+#     state=present
+#     create=yes
+#     line="{{ item.auth_key }}"
+#     owner={{bossjones__user}}
+#     group={{bossjones__user}}
+#     mode=0644
+#   when: item.auth_key is defined
+#   with_items: users
+
+- name: add vagrant id_rsa key
+  template:
+    src: "id_rsa.j2"
+    dest: "/home/{{bossjones__user}}/.ssh/id_rsa"
+    mode: "0600"
+  become: '{{ item }}'
+  become_user: "{{bossjones__user}}"
+  ignore_errors: yes
+  with_items:
+    - true  # Run as vagrant
+
+- name: add vagrant id_rsa.pub key
+  template:
+    src: "id_rsa.pub.j2"
+    dest: "/home/{{bossjones__user}}/.ssh/id_rsa.pub"
+    mode: "0644"
+  become: '{{ item }}'
+  become_user: "{{bossjones__user}}"
+  ignore_errors: yes
+  with_items:
+    - true  # Run as vagrant
+

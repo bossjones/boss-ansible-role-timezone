@@ -1,0 +1,11 @@
+---
+
+users:
+  - name: vagrant
+    sudoer: yes
+
+boss__wireshark__debug_mode: True
+
+
+bossjones__user: vagrant
+bossjones__group: vagrant
