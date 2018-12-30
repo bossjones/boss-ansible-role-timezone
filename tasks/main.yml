@@ -23,6 +23,14 @@
   register: current_timezone
   changed_when: False
 
+- name: "Check timedatectl ntp status"
+  shell: /usr/bin/timedatectl status | grep "NTP synchronized"
+  register: ntp_sync_status
+  changed_when: False
+
+- debug: msg="Dump timedatectl ntp status - {{ ntp_sync_status.stdout }}"
+  when: ntp_sync_status is defined
+
 - name: Run timedatectl status
   command: /usr/bin/timedatectl status
   changed_when: False
@@ -37,7 +45,7 @@
   notify:
   - restart systemd-timesyncd
   - restart cron
-  when: '"NTP synchronized: yes" in timedatectl_status_result.stdout'
+  # when: '"NTP synchronized: yes" in timedatectl_status_result.stdout'
 
 - name: Run timedatectl status again
   command: /usr/bin/timedatectl status
@@ -81,9 +89,12 @@
 #  RTC in local TZ: no
 # root@timezone-node1:~#
 
-- name: Verify that new timezone is in stdout of timedatectl
+
+- debug: msg="{{ timezone }}"
+
+- name: "Verify that new timezone is in stdout of timedatectl timezone={{timezone}}"
   shell: timedatectl status
   register: timedatectl_logout
   failed_when: >
-    "{{ timezone }}" not in timedatectl_logout.stdout or
+    timezone not in timedatectl_logout.stdout and
     'Network time on: no' in timedatectl_logout.stdout

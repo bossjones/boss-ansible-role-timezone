@@ -250,3 +250,5 @@ open-netdata-registry:
 
 open-graphite:
 	./scripts/open-browser.py $(URL_PATH_GRAPHITE)
+
+converge: up run-ansible
