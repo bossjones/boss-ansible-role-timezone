@@ -98,3 +98,4 @@
   failed_when: >
     timezone not in timedatectl_logout.stdout and
     'Network time on: no' in timedatectl_logout.stdout
+  run_once: True
