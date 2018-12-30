@@ -92,10 +92,10 @@
 
 - debug: msg="{{ timezone }}"
 
-- name: "Verify that new timezone is in stdout of timedatectl timezone={{timezone}}"
-  shell: timedatectl status
-  register: timedatectl_logout
-  failed_when: >
-    timezone not in timedatectl_logout.stdout and
-    'Network time on: no' in timedatectl_logout.stdout
-  run_once: True
+# - name: "Verify that new timezone is in stdout of timedatectl timezone={{timezone}}"
+#   shell: timedatectl status
+#   register: timedatectl_logout
+#   failed_when: >
+#     timezone not in timedatectl_logout.stdout and
+#     'Network time on: no' in timedatectl_logout.stdout
+#   run_once: True
