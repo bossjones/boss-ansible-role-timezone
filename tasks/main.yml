@@ -23,6 +23,15 @@
   register: current_timezone
   changed_when: False
 
+- name: "Check systemctl unmask systemd-timesyncd.service"
+  shell: systemctl unmask systemd-timesyncd.service
+  register: timesyncd_status
+  changed_when: False
+  ignore_errors: yes
+
+- name: Keep systemd-timesyncd on - but without ntp support enabled
+  service: name=systemd-timesyncd state=started enabled=yes
+
 - name: "Check timedatectl ntp status"
   shell: /usr/bin/timedatectl status | grep "NTP synchronized"
   register: ntp_sync_status
