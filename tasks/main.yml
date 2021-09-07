@@ -6,6 +6,9 @@
 - name: install tzdata if it is necessary
   apt: name=tzdata state=present
 
+- name: install systemd-timesyncd if it is necessary
+  apt: name=systemd-timesyncd state=present
+
 - name: "Check current timezone"
   shell: cat /etc/timezone
   register: current_timezone
