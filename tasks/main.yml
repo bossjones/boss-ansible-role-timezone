@@ -42,6 +42,7 @@
   command: /usr/bin/timedatectl set-ntp no
   changed_when: False
   check_mode: no
+  ignore_errors: yes
   register: timedatectl_set_no_ntp_result
   notify:
   - restart systemd-timesyncd
@@ -52,6 +53,7 @@
   command: /usr/bin/timedatectl status
   register: timedatectl_set_no_ntp_result
   changed_when: 'timedatectl_set_no_ntp_result.stdout is search("Network time on: no")'
+  ignore_errors: yes
   notify:
   - restart systemd-timesyncd
   - restart cron
